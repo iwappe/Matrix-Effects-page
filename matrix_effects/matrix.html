@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Effect</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            overflow: hidden; /* スクロールバーを非表示にする */
+        }
+
+        canvas {
+            background: black; /* 背景を黒に設定 */
+            display: block;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrixCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById('matrixCanvas');
+        const context = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const katakana = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ10ｱﾅｺﾞｲｸﾗｳﾅｷﾞｴﾋﾞｵｵﾄﾛｶﾜﾊｷﾞｷｸﾗｹﾞｺｲｻｼﾐﾀﾞｲｽｷ'; // 使用する文字
+        const fontSize = 16; // 文字のサイズ
+        const columns = canvas.width / fontSize; // 列の数
+        const drops = []; // 各列のY位置を保存する配列
+
+        for(let x = 0; x < columns; x++) {
+            drops[x] = 1;
+        }
+
+        function draw() {
+            context.fillStyle = 'rgba(0, 0, 0, 0.05)'; // 前のフレームをぼかす
+            context.fillRect(0, 0, canvas.width, canvas.height);
+
+            context.fillStyle = '#0F0'; // 文字の色を黄緑に設定
+            context.font = fontSize + 'px monospace'; // フォントを指定
+
+            for(let i = 0; i < drops.length; i++) {
+                const text = katakana.charAt(Math.floor(Math.random() * katakana.length));
+                context.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0; // 文字が画面の下に到達したら、上に戻す
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(draw, 30); // 30ミリ秒ごとにdraw関数を実行
+    </script>
+</body>
+</html>
